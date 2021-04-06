@@ -1,9 +1,51 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Navbar from '../../components/Layouts/Navbar/NavbarSignin';
 import { TextSemi, TextMedium16 } from '../../utils/typography';
 import { Input, Button, Image } from '@geist-ui/react';
 import { LoginContainer, HelperText, SocialLogin } from './register.style';
-function register() {
+import { Magic } from 'magic-sdk';
+import { OAuthExtension } from '@magic-ext/oauth';
+import { useUser } from '../../lib/hooks'
+import { ethers } from 'ethers';
+
+function register(props) {
+
+  console.log("props", props)
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [magic, setMagic] = useState(null);
+
+  useEffect(() => {
+    !magic &&
+      setMagic(
+        new Magic(process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY, {
+          extensions: [new OAuthExtension()],
+        })
+      );
+    magic?.preload();
+  }, [magic]);
+
+  async function handleLoginWithSocial(provider) {
+    await magic.oauth.loginWithRedirect({
+      provider,
+      redirectURI: `${process.env.NEXT_PUBLIC_CLIENT_URL}/callback`,
+    });
+  }
+
+    // try to login with webauthn, if that fails, revert to registering with webauthn
+    async function authenticateWithServer(didToken) {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_MIDDLEWARE_URL}/api/login`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + didToken,
+          },
+        }
+      );
+      res.status === 200 && Router.push('/');
+    }
+
   return (
     <>
       <Navbar />
@@ -49,6 +91,9 @@ function register() {
               className='social__login-btn'
               icon={<Image width='25' height='25' src='/assets/google.png' />}
               placeholder='GitHub'
+              onClick={() => {
+                handleLoginWithSocial('google');
+              }}
             >
               Signup with Google
             </Button>
@@ -56,6 +101,9 @@ function register() {
               className='social__login-btn'
               icon={<Image width='25' height='25' src='/assets/github.png' />}
               placeholder='GitHub'
+              onClick={() => {
+                handleLoginWithSocial('github');
+              }}
             >
               Signup with Github
             </Button>

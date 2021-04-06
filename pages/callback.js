@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { Magic } from 'magic-sdk';
 import { OAuthExtension } from '@magic-ext/oauth';
 import Router, { useRouter } from 'next/router';
-import Layout from '../components/Layout';
-import Loader from '../components/modals/Loader';
+// import Layout from '../components/Layout';
+//import Loader from '../components/modals/Loader';
 import {ethers} from "ethers";
-import {checkEmailExists, generateCipherKey, loginUserWithChallenge, registerNewUser} from "../lib/threadDb";
-import {definitions} from "../utils/config.json";
+//import {checkEmailExists, generateCipherKey, loginUserWithChallenge, registerNewUser} from "../lib/threadDb";
+//import {definitions} from "../utils/config.json";
 
 const Callback = (props) => {
   const [magic, setMagic] = useState(null);
@@ -38,9 +38,9 @@ const Callback = (props) => {
       } = await magic.oauth.getRedirectResult();
       setShowValidatingToken(true);
       let web3Provider = new ethers.providers.Web3Provider(magic.rpcProvider)
-      const {idx, identity, threadData}=await props.handleMagicLinkWeb3(web3Provider)
+      const {idx, identity}=await props.handleMagicLink(web3Provider)
       console.log("Done")
-      await authenticateWithServer(idToken, idx, identity, threadData);
+      await authenticateWithServer(idToken, idx, identity);
     } catch (error) {
       console.log(error);
       setErrorMsg('Error logging in. Please try again.');
@@ -60,7 +60,7 @@ const Callback = (props) => {
     }
   };
 
-  const authenticateWithServer = async (didToken, idx, identity, threadData) => {
+  const authenticateWithServer = async (didToken, idx, identity) => {
     let res = await fetch(`${process.env.NEXT_PUBLIC_MIDDLEWARE_URL}/api/login`, {
       method: 'POST',
       headers: {
@@ -72,59 +72,42 @@ const Callback = (props) => {
 
     if (res.status === 200){
       let userMetadata = await magic.user.getMetadata();
-      console.log("threadData:",threadData)
+      // console.log("threadData:",threadData)
       console.log("User:", userMetadata)
-      if (threadData===null){
-        await registerMagicLinkUser(idx, identity, userMetadata.email)
-      }else{
-        console.log("User already registered!!")
-      }
+      await registerMagicLinkUser(idx, identity, userMetadata.email)
+      // if (threadData===null){
+      //   await registerMagicLinkUser(idx, identity, userMetadata.email)
+      // }else{
+      //   console.log("User already registered!!")
+      // }
     }
     Router.push('/')
   };
 
   const registerMagicLinkUser = async (idx, identity, email)=>{
-    const aesKey = await generateCipherKey()
     if (idx) {
-      const client = await loginUserWithChallenge(identity);
-      if (client != null) {
-
-        const {status} = await checkEmailExists(email)
-        if (status){
-          const enc = await idx.ceramic.did.createDagJWE(aesKey, [idx.id])
-
-          const ceramicRes = await idx.set(definitions.profile, {
-            name: ' ',
-            email: email
+          await idx.set('basicProfile', {
+            name: 'Yathish',
+            emoji: '👻',
+            description:
+              'Curabitur vel aliquet mauris, ac varius dolor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum feugiat massa vel odio molestie posuere. Praesent aliquam velit dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Curabitur accumsan eros et pulvinar auctor. Nunc sapien lorem, ultricies id mauris a, bibendum accumsan sapien.',
+            homeLocation: 'New York City',
+            residenceCountry: 'US',
+            url: 'https://ceramic.network',
           })
-
-          const encCeramic = await idx.set(definitions.encryptionKey, {
-            key: enc
-          })
-
-          const threadRes = await registerNewUser(idx.id, ' ', email, enc, 1)
-
-          props.setUserData(threadRes);
-          if (ceramicRes && threadRes) {
-            props.setUser(2);
+          console.log(`DID with profile: ${idx.id}`)
+          } else {
+            console.log("Not authenticated with server!!!")
           }
-        }else {
-          // popup
-          alert("Email exists22!!!")
-        }
-      } else {
-        console.log("Not authenticated with server!!!")
       }
-    }
-  }
 
   return (
-    <Layout>
+    <div>
       {errorMsg ? (
         <div className='error'>{errorMsg}</div>
       ) : (
         <div className='callback-container'>
-            <Loader loading={true} heading="Connecting to Magic Link" content="Fetching data" />
+            {/* <Loader loading={true} heading="Connecting to Magic Link" content="Fetching data" /> */}
           {/* {showValidatingToken && <div className='auth-step'>Validating token...</div>} */}
         </div>
       )}
@@ -142,7 +125,7 @@ const Callback = (props) => {
           color: red;
         }
       `}</style>
-    </Layout>
+    </div>
   );
 };
 
