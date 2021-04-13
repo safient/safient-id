@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Avatar, Spacer, Input, Grid, Card } from '@geist-ui/react';
 import { FormBottom, ProfileHeader, IconContainer, Form } from '../Profile';
 import {
@@ -8,12 +8,28 @@ import {
   HeadingSemi,
   TextSemi,
 } from '../../utils';
+import { Twitch } from 'react-feather';
 
 const MockItem = () => {
   return <Card shadow style={{ width: '100%', height: '50px' }} />;
 };
 
 function Profile() {
+  // edit-btn if it's true, text inputs will be enabled
+  const [edit, setEdit] = useState(false);
+  const [name, setName] = useState('');
+  const [location, setLocation] = useState('Bengaluru');
+  const [website, setWebsite] = useState('');
+  const [dob, setDob] = useState('');
+  const [github, setGithub] = useState('');
+  const [twitter, setTwitter] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [employer, setEmployer] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+
+  console.log(dob);
+
   return (
     <>
       <ProfileHeader>
@@ -37,7 +53,11 @@ function Profile() {
           </div>
 
           <div className='profile-header__right'>
-            <Button auto className='btn btn-primary'>
+            <Button
+              auto
+              className='btn btn-primary'
+              onClick={(e) => setEdit(true)}
+            >
               {' '}
               Edit Profile
             </Button>
@@ -45,13 +65,17 @@ function Profile() {
         </div>
         <IconContainer>
           <div className='icons-meta'>
-            <img src='/assets/icons/location.svg' alt='location' srcset='' />
+            <img
+              src='/assets/icons/location.svg'
+              alt='location'
+              srcSet='/assets/icons/location.svg'
+            />
             <div className='icons-meta__title'>
               <TextSemi>Bangalore</TextSemi>
             </div>
           </div>
           <div className='icons-meta'>
-            <img src='/assets/icons/email.svg' alt='email' srcset='' />
+            <img src='/assets/icons/email.svg' alt='email' />
             <div className='icons-meta__title'>
               <TextSemi>koushith@consensolabs.com</TextSemi>
             </div>
@@ -69,7 +93,8 @@ function Profile() {
               <TextSemi>Name</TextSemi>
               <Spacer y={0.2} />
               <Input
-                size='small'
+                value={name}
+                readOnly={!edit}
                 placeholder='John Doe'
                 className='form-group__input input'
               />
@@ -78,8 +103,9 @@ function Profile() {
               <TextSemi>Location</TextSemi>
               <Spacer y={0.2} />
               <Input
-                size='small'
-                placeholder='John Doe'
+                value={location}
+                readOnly={!edit}
+                placeholder={location}
                 className='form-group__input input'
               />
             </div>
@@ -90,7 +116,8 @@ function Profile() {
               <TextSemi>Website</TextSemi>
               <Spacer y={0.2} />
               <Input
-                size='small'
+                value={website}
+                readOnly={!edit}
                 placeholder='John Doe'
                 className='form-group__input input'
               />
@@ -99,8 +126,10 @@ function Profile() {
               <TextSemi>DOB</TextSemi>
               <Spacer y={0.2} />
               <Input
+                onChange={(e) => setDob(e.target.value)}
+                value={dob}
+                readOnly={!edit}
                 type='date'
-                size='small'
                 placeholder='John Doe'
                 className='form-group__input input'
               />
@@ -118,16 +147,22 @@ function Profile() {
               <Spacer y={0.2} />
 
               <Input
-                placeholder='https://github/'
+                value={twitter}
+                readOnly={!edit}
+                label='https://github.com/'
+                placeholder='koushith'
                 className='form-group__input input'
               />
             </div>
             <div className='form-group__input'>
               <TextSemi>Twitter</TextSemi>
               <Spacer y={0.2} />
+
               <Input
-                size='small'
-                placeholder='https://twitter.com/johndoe'
+                value={twitter}
+                readOnly={!edit}
+                label='https://twitter.com/'
+                placeholder='koushith'
                 className='form-group__input input'
               />
             </div>
@@ -143,8 +178,9 @@ function Profile() {
               <TextSemi>Email</TextSemi>
               <Spacer y={0.2} />
               <Input
+                value={email}
+                readOnly={!edit}
                 type='email'
-                size='small'
                 placeholder='Johndoe@domain.com'
                 className='form-group__input input'
               />
@@ -153,8 +189,9 @@ function Profile() {
               <TextSemi>Phone</TextSemi>
               <Spacer y={0.2} />
               <Input
-                size='small'
-                placeholder='99 99 99 99 99'
+                value={phone}
+                readOnly={!edit}
+                placeholder='99-99-99-99-99'
                 className='form-group__input input'
               />
             </div>
@@ -170,7 +207,8 @@ function Profile() {
               <TextSemi>Employer</TextSemi>
               <Spacer y={0.2} />
               <Input
-                size='small'
+                value={employer}
+                readOnly={!edit}
                 placeholder='Consenso Labs'
                 className='form-group__input input'
               />
@@ -179,7 +217,9 @@ function Profile() {
               <TextSemi>Job Title</TextSemi>
               <Spacer y={0.2} />
               <Input
-                size='small'
+                onClick={(e) => setJobTitle(e.target.value)}
+                readOnly={!edit}
+                value={jobTitle}
                 placeholder='Blockchain Engineer'
                 className='form-group__input input'
               />
