@@ -1,270 +1,202 @@
-import React, { useState, useEffect } from 'react';
-import { Avatar, Button, Text, Link, Row } from '@geist-ui/react';
-import makeStyles from '../makeStyles';
-import * as Icons from 'react-feather';
-import ProfileCard from './ProfileCard';
-import AddressModal from './AddressModal';
-import EditProfile from '../modals/EditProfile';
-import Loader from '../modals/Loader';
-import { definitions } from '../../utils/config.json';
-//import { decryptData, encryptData } from '../../lib/threadDb';
+import React from 'react';
+import { Button, Avatar, Spacer, Input, Grid, Card } from '@geist-ui/react';
+import { FormBottom, ProfileHeader, IconContainer, Form } from '../Profile';
+import {
+  TextMedium16,
+  TextSemi20,
+  HeaderText,
+  HeadingSemi,
+  TextSemi,
+} from '../../utils';
 
-const useStyles = makeStyles((ui) => ({
-  root: {
-    borderBottom: `solid 1px ${ui.palette.accents_2}`,
-    backgroundColor: ui.background,
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: ui.layout.pageWidthWithMargin,
-    maxWidth: '100%',
-    padding: `calc(${ui.layout.gap} * 2) ${ui.layout.pageMargin} calc(${ui.layout.gap} * 4)`,
-    boxSizing: 'border-box',
-    margin: '0 auto',
-    borderBottom: `solid 1px ${ui.palette.accents_2}`,
-  },
-  avatar: {
-    width: '100px !important',
-    height: '100px !important',
-    marginRight: '30px !important',
-  },
-  name: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    flex: 1,
-  },
-  title: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  username: {
-    lineHeight: 1,
-  },
-  createProjectButton: {
-    marginLeft: '16px !important',
-  },
-  editProfile: {
-    minWidth: '191px',
-  },
-  [`@media screen and (max-width: ${ui.layout.pageWidthWithMargin})`]: {
-    createProjectButton: {
-      display: 'none !important',
-    },
-    avatar: {
-      width: '80px !important',
-      height: '80px !important',
-      marginRight: '20px !important',
-    },
-    username: {
-      fontSize: 24,
-    },
-  },
-  projects: {
-    // width: '1040px !important',
-    width: 'auto',
-    maxWidth: '100%',
-  },
-  integrationsTitle: {
-    textTransform: 'uppercase',
-    color: `${ui.palette.accents_5} !important`,
-    fontWeight: 500,
-    fontSize: 12,
-    margin: 0,
-  },
-  integrationsUsername: {
-    margin: '0 0 0 4px',
-    fontWeight: 0,
-  },
-  crypto: {
-    width: '50px !important',
-    height: '50px !important',
-    marginRight: '25px !important',
-  },
-  heading: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: ui.layout.pageWidthWithMargin,
-    paddingLeft: 23.333,
-    boxSizing: 'border-box',
-    margin: '0 auto',
-  },
-}));
+const MockItem = () => {
+  return <Card shadow style={{ width: '100%', height: '50px' }} />;
+};
 
-const Profile = ({ idx, userData }) => {
-  const classes = useStyles();
-  const [modal, setModal] = useState(false);
-  const [addressArray, setAddress] = useState([]);
-  const [aesKey, setAesKey] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [editName, setEditName] = useState(false);
-
-  // useEffect(() => {
-  //   async function fetch() {
-  //     try {
-  //       if (idx) {
-  //         const res = JSON.parse(localStorage.getItem('USER'));
-  //         const dec = await idx.ceramic.did.decryptDagJWE(res.aesKey);
-  //         setAesKey(dec);
-  //         const [addressList] = await Promise.all([
-  //           idx.get(definitions.portfolio, idx.id),
-  //         ]);
-  //         console.log(addressList);
-  //         if (addressList) {
-  //           const decryptedData = await decryptData(
-  //             Buffer.from(addressList.portfolio, 'hex'),
-  //             dec
-  //           );
-  //           console.log(JSON.parse(decryptedData.toString('utf8')));
-  //           addressList
-  //             ? setAddress(JSON.parse(decryptedData.toString('utf8')))
-  //             : setAddress([]);
-  //         } else {
-  //           setAddress([]);
-  //         }
-  //       }
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  //   fetch();
-  // }, [idx]);
-
-  // const addAddress = async (newAddress) => {
-  //   setLoading(true);
-  //   setModal(false);
-  //   const newAddresses = [...addressArray, newAddress];
-
-  //   const encryptedData = await encryptData(
-  //     Buffer.from(JSON.stringify(newAddresses)),
-  //     aesKey
-  //   );
-  //   console.log(encryptedData);
-  //   setAddress(newAddresses);
-  //   const docId = await idx.set(definitions.portfolio, {
-  //     portfolio: encryptedData.toString('hex'),
-  //   });
-  //   localStorage.setItem('docId', docId.toString());
-  //   setLoading(false);
-  // };
-
+function Profile() {
   return (
-    <div>
-      <Loader
-        loading={loading}
-        heading={'Add address'}
-        content={'Adding address'}
-      />
-      <AddressModal modal={modal} setModal={setModal} addAddress={addAddress} />
-      <EditProfile
-        editName={editName}
-        setEditName={setEditName}
-        email={userData.email}
-      />
-
-      <div className={classes.root}>
-        {userData ? (
-          <div className={classes.content}>
-            <Avatar
-              alt='Your Avatar'
-              className={classes.avatar}
-              src='/assets/avatar.png'
-            />
-            <div className={classes.name}>
-              <div className={classes.title}>
-                <Text h2 className={classes.username}>
-                  {userData.name}
-                </Text>
-                <div>
-                  <Button
-                    className={classes.editProfile}
-                    type='primary'
-                    auto
-                    icon={<Icons.Edit />}
-                    onClick={() => setEditName(true)}
-                  >
-                    Edit Profile
-                  </Button>
-                  <Button
-                    className={classes.createProjectButton}
-                    type='secondary'
-                    auto
-                    icon={<Icons.Plus />}
-                    onClick={() => setModal(true)}
-                  >
-                    Add New Address
-                  </Button>
-                </div>
+    <>
+      <ProfileHeader>
+        <div className='profile-header'>
+          <div className='profile-header__left'>
+            <div className='profile-header__meta'>
+              <div className='profile-header__meta-image'>
+                <Avatar
+                  src='https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+                  size='large'
+                  isSquare={true}
+                />
               </div>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Icons.Mail size={16} aria-label='Email' />
-                  <Text className={classes.integrationsUsername}>
-                    {userData.email}
-                  </Text>
-                </div>
-                <Link
-                  href='https://github.com/consensolabs'
-                  target='_blank'
-                  rel='noopener'
-                  underline
-                >
-                  <div style={{ display: 'flex', alignItems: 'center' }}></div>
-                </Link>
+
+              <div className='profile-header__meta-name'>
+                <TextSemi20>Koushith</TextSemi20>
+                <Spacer y={0.2} />
+                <TextMedium16>0x337b2aF19e840E8...</TextMedium16>
               </div>
             </div>
           </div>
-        ) : (
-          <Row style={{ padding: '10px 0' }}>
-            :<Text> No user data found</Text>
-          </Row>
-        )}
 
-        <div
-          className={classes.heading}
-          style={{
-            marginBottom: '0px',
-            height: '0px',
-            background: 'red',
-            marginTop: '18px',
-          }}
-        >
-          <Text h4 className={classes.username}>
-            My Portfolio Accounts
-          </Text>
-        </div>
-        <div className={classes.content}>
-          <div className={classes.projects}>
-            {addressArray.length > 0 ? (
-              addressArray.map((add, index) => {
-                console.log(add);
-                return (
-                  <ProfileCard
-                    address={add.address}
-                    name={add.chain}
-                    addAddress={addAddress}
-                    key={index}
-                  />
-                );
-              })
-            ) : (
-              <Row style={{ padding: '10px 0' }}>
-                {/* <Image
-                    src='/assets/notFound.svg'
-                    alt='No Portfolios Found'
-                    width={350}
-                  /> */}
-
-                <Text>No Portfolios Found</Text>
-              </Row>
-            )}
+          <div className='profile-header__right'>
+            <Button auto className='btn btn-primary'>
+              {' '}
+              Edit Profile
+            </Button>
           </div>
         </div>
-      </div>
-    </div>
+        <IconContainer>
+          <div className='icons-meta'>
+            <img src='/assets/icons/location.svg' alt='location' srcset='' />
+            <div className='icons-meta__title'>
+              <TextSemi>Bangalore</TextSemi>
+            </div>
+          </div>
+          <div className='icons-meta'>
+            <img src='/assets/icons/email.svg' alt='email' srcset='' />
+            <div className='icons-meta__title'>
+              <TextSemi>koushith@consensolabs.com</TextSemi>
+            </div>
+          </div>
+        </IconContainer>
+      </ProfileHeader>
+
+      {/* form section */}
+
+      <Form>
+        <HeadingSemi>Basic</HeadingSemi>
+        <div className='form-group'>
+          <div className='form-group__fields'>
+            <div className='form-group__input'>
+              <TextSemi>Name</TextSemi>
+              <Spacer y={0.2} />
+              <Input
+                size='small'
+                placeholder='John Doe'
+                className='form-group__input input'
+              />
+            </div>
+            <div className='form-group__input'>
+              <TextSemi>Location</TextSemi>
+              <Spacer y={0.2} />
+              <Input
+                size='small'
+                placeholder='John Doe'
+                className='form-group__input input'
+              />
+            </div>
+          </div>
+
+          <div className='form-group__fields'>
+            <div className='form-group__input'>
+              <TextSemi>Website</TextSemi>
+              <Spacer y={0.2} />
+              <Input
+                size='small'
+                placeholder='John Doe'
+                className='form-group__input input'
+              />
+            </div>
+            <div className='form-group__input'>
+              <TextSemi>DOB</TextSemi>
+              <Spacer y={0.2} />
+              <Input
+                type='date'
+                size='small'
+                placeholder='John Doe'
+                className='form-group__input input'
+              />
+            </div>
+          </div>
+        </div>
+      </Form>
+
+      <Form>
+        <HeadingSemi>Verified Accounts</HeadingSemi>
+        <div className='form-group'>
+          <div className='form-group__fields'>
+            <div className='form-group__input'>
+              <TextSemi>GitHub</TextSemi>
+              <Spacer y={0.2} />
+
+              <Input
+                placeholder='https://github/'
+                className='form-group__input input'
+              />
+            </div>
+            <div className='form-group__input'>
+              <TextSemi>Twitter</TextSemi>
+              <Spacer y={0.2} />
+              <Input
+                size='small'
+                placeholder='https://twitter.com/johndoe'
+                className='form-group__input input'
+              />
+            </div>
+          </div>
+        </div>
+      </Form>
+
+      <Form>
+        <HeadingSemi>Contact</HeadingSemi>
+        <div className='form-group'>
+          <div className='form-group__fields'>
+            <div className='form-group__input'>
+              <TextSemi>Email</TextSemi>
+              <Spacer y={0.2} />
+              <Input
+                type='email'
+                size='small'
+                placeholder='Johndoe@domain.com'
+                className='form-group__input input'
+              />
+            </div>
+            <div className='form-group__input'>
+              <TextSemi>Phone</TextSemi>
+              <Spacer y={0.2} />
+              <Input
+                size='small'
+                placeholder='99 99 99 99 99'
+                className='form-group__input input'
+              />
+            </div>
+          </div>
+        </div>
+      </Form>
+
+      <Form>
+        <HeadingSemi>Work</HeadingSemi>
+        <div className='form-group'>
+          <div className='form-group__fields'>
+            <div className='form-group__input'>
+              <TextSemi>Employer</TextSemi>
+              <Spacer y={0.2} />
+              <Input
+                size='small'
+                placeholder='Consenso Labs'
+                className='form-group__input input'
+              />
+            </div>
+            <div className='form-group__input'>
+              <TextSemi>Job Title</TextSemi>
+              <Spacer y={0.2} />
+              <Input
+                size='small'
+                placeholder='Blockchain Engineer'
+                className='form-group__input input'
+              />
+            </div>
+          </div>
+        </div>
+      </Form>
+      <FormBottom>
+        <Button auto className='btn-secondary'>
+          Cancel
+        </Button>
+        <Button auto primary className='btn-primary'>
+          Save
+        </Button>
+      </FormBottom>
+    </>
   );
-};
+}
 
 export default Profile;
