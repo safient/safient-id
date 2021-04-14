@@ -1,1 +1,0 @@
-{"ast":null,"code":"export * from './Profile.Style';","map":{"version":3,"sources":["D:/identity-managment/components/Profile/index.js"],"names":[],"mappings":"AAAA,cAAc,iBAAd","sourcesContent":["export * from './Profile.Style';\r\n"]},"metadata":{},"sourceType":"module"}

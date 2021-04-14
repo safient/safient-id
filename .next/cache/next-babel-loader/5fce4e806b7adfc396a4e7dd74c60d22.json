@@ -1,1 +1,0 @@
-{"ast":null,"code":"export * from './colors';\nexport * from './typography';","map":{"version":3,"sources":["D:/identity-managment/utils/index.js"],"names":[],"mappings":"AAAA,cAAc,UAAd;AACA,cAAc,cAAd","sourcesContent":["export * from './colors';\r\nexport * from './typography';\r\n"]},"metadata":{},"sourceType":"module"}
