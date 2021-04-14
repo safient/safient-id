@@ -99,6 +99,10 @@ export const Form = styled.div`
           color: grey;
         }
       }
+
+      .text-area {
+        height: 100px;
+      }
     }
   }
 `;

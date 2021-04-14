@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Button, Avatar, Spacer, Input, Grid, Card } from '@geist-ui/react';
+import {
+  Button,
+  Avatar,
+  Spacer,
+  Input,
+  Grid,
+  Card,
+  Textarea,
+} from '@geist-ui/react';
 import { FormBottom, ProfileHeader, IconContainer, Form } from '../Profile';
 import {
   TextMedium16,
@@ -20,15 +28,10 @@ function Profile() {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('Bengaluru');
   const [website, setWebsite] = useState('');
-  const [dob, setDob] = useState('');
+  const [bio, setBio] = useState('');
   const [github, setGithub] = useState('');
   const [twitter, setTwitter] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [employer, setEmployer] = useState('');
-  const [jobTitle, setJobTitle] = useState('');
-
-  console.log(dob);
 
   return (
     <>
@@ -113,25 +116,25 @@ function Profile() {
 
           <div className='form-group__fields'>
             <div className='form-group__input'>
-              <TextSemi>Website</TextSemi>
+              <TextSemi>ULR</TextSemi>
               <Spacer y={0.2} />
               <Input
                 value={website}
                 readOnly={!edit}
-                placeholder='John Doe'
+                placeholder='https://www.domain.com'
                 className='form-group__input input'
               />
             </div>
             <div className='form-group__input'>
-              <TextSemi>DOB</TextSemi>
+              <TextSemi>Bio</TextSemi>
               <Spacer y={0.2} />
-              <Input
-                onChange={(e) => setDob(e.target.value)}
-                value={dob}
+              <Textarea
+                width='100%'
+                onChange={(e) => setBio(e.target.value)}
+                value={bio}
                 readOnly={!edit}
-                type='date'
-                placeholder='John Doe'
-                className='form-group__input input'
+                placeholder='...'
+                className='form-group__input input text-area'
               />
             </div>
           </div>
@@ -185,48 +188,10 @@ function Profile() {
                 className='form-group__input input'
               />
             </div>
-            <div className='form-group__input'>
-              <TextSemi>Phone</TextSemi>
-              <Spacer y={0.2} />
-              <Input
-                value={phone}
-                readOnly={!edit}
-                placeholder='99-99-99-99-99'
-                className='form-group__input input'
-              />
-            </div>
           </div>
         </div>
       </Form>
 
-      <Form>
-        <HeadingSemi>Work</HeadingSemi>
-        <div className='form-group'>
-          <div className='form-group__fields'>
-            <div className='form-group__input'>
-              <TextSemi>Employer</TextSemi>
-              <Spacer y={0.2} />
-              <Input
-                value={employer}
-                readOnly={!edit}
-                placeholder='Consenso Labs'
-                className='form-group__input input'
-              />
-            </div>
-            <div className='form-group__input'>
-              <TextSemi>Job Title</TextSemi>
-              <Spacer y={0.2} />
-              <Input
-                onClick={(e) => setJobTitle(e.target.value)}
-                readOnly={!edit}
-                value={jobTitle}
-                placeholder='Blockchain Engineer'
-                className='form-group__input input'
-              />
-            </div>
-          </div>
-        </div>
-      </Form>
       <FormBottom>
         <Button auto className='btn-secondary'>
           Cancel
