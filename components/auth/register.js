@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import Navbar from '../../components/Layouts/Navbar/NavbarSignin';
+import Navbar from '../Layouts/Navbar/Navbar';
 import { TextSemi, TextMedium16 } from '../../utils/typography';
 import { Input, Button, Image } from '@geist-ui/react';
 import { LoginContainer, HelperText, SocialLogin } from './register.style';
@@ -8,9 +8,8 @@ import { OAuthExtension } from '@magic-ext/oauth';
 import { useUser } from '../../lib/hooks'
 import { ethers } from 'ethers';
 
-function register(props) {
+function Register(props) {
 
-  console.log("props", props)
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [magic, setMagic] = useState(null);
 
@@ -48,14 +47,13 @@ function register(props) {
 
   return (
     <>
-      <Navbar />
       <LoginContainer className='login__container'>
         <div className='login__form'>
           <div className='login__form-heading'>
             <TextSemi>Create an Account</TextSemi>
           </div>
           {/* <div className='login__form-fields'> */}
-          <div className='login__form-input-group'>
+          {/* <div className='login__form-input-group'>
             <TextMedium16 className='login__form-input-group-label'>
               Email Address
             </TextMedium16>
@@ -74,9 +72,9 @@ function register(props) {
               size='medium'
               placeholder='*************'
             />
-          </div>
+          </div> */}
           <div className='login__form-signup-groups'>
-            <Button className='login__form-signup-groups-btn'>Sign up</Button>
+            <Button className='login__form-signup-groups-btn' onClick={props.connect}>Connect You Wallet</Button>
           </div>
           {/* </div> */}
           <HelperText>
@@ -114,4 +112,4 @@ function register(props) {
   );
 }
 
-export default register;
+export default Register;

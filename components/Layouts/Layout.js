@@ -6,9 +6,9 @@ import Navbar from './Navbar/Navbar';
 const Layout = (props) => {
   return (
     <>
-      <header>
+      {/* <header>
         <Navbar />
-      </header>
+      </header> */}
 
       <main>
         <div className='container'>{props.children}</div>

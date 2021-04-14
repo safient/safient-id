@@ -81,6 +81,7 @@ const Callback = (props) => {
       //   console.log("User already registered!!")
       // }
     }
+    props.setUserStatus(2)
     Router.push('/')
   };
 
@@ -88,12 +89,12 @@ const Callback = (props) => {
     if (idx) {
           await idx.set('basicProfile', {
             name: 'Yathish',
-            emoji: '👻',
             description:
               'Curabitur vel aliquet mauris, ac varius dolor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum feugiat massa vel odio molestie posuere. Praesent aliquam velit dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Curabitur accumsan eros et pulvinar auctor. Nunc sapien lorem, ultricies id mauris a, bibendum accumsan sapien.',
-            homeLocation: 'New York City',
-            residenceCountry: 'US',
-            url: 'https://ceramic.network',
+            birthDate: '1998-05-14',
+            url: email,
+            homeLocation: 'Bangalore',
+            residenceCountry: 'IN',            
           })
           console.log(`DID with profile: ${idx.id}`)
           } else {

@@ -17,6 +17,14 @@ const CERAMIC_URL = 'https://ceramic.signchain.xyz'
 
 
 function MyApp({ Component, pageProps }) {
+
+  const status = {
+    "NotLoggedIn": 0,
+    "SignedUp": 1,
+    "LoggedIn": 2
+  }
+
+
   const [themeType, setThemeType] = useState('light');
   const [web3Modal, setWeb3Modal] = useState(null)
   const [idx, setIdx] = useState(null);
@@ -24,6 +32,7 @@ function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState(0);
   const [userData, setUserData] =useState([]);
   const [identity, setIdentity] = useState(null);
+  const [userStatus, setUserStatus] = useState(0)
 
   const toggleDarkMode = () =>
   setThemeType(themeType === 'dark' ? 'light' : 'dark');
@@ -70,6 +79,10 @@ function MyApp({ Component, pageProps }) {
       setCeramic(ceramic)
       const idx = new IDX({ ceramic })
       setIdx(idx)
+      console.log("IDX", idx)
+      if(idx){
+        setUserStatus(2)
+      }
     }
   }
 
@@ -92,14 +105,10 @@ function MyApp({ Component, pageProps }) {
       setCeramic(ceramic)
       const idx = new IDX({ ceramic })
       setIdx(idx)
+      if(idx) {
+        setUserStatus(1)
+      }
       return {idx, identity}
-  }
-
-
-  const getData = async () => {
-    const res = await idx.get("basicProfile", idx.id)
-    console.log("Result", res);
-    console.log("Did", idx.id)
   }
 
   return (
@@ -110,7 +119,9 @@ function MyApp({ Component, pageProps }) {
       <Component {...pageProps} 
       connect = {connect}
       handleMagicLink = {magicLinkConnect}
-      getData = {getData}
+      userStatus = {userStatus}
+      setUserStatus = {setUserStatus}
+      idx={idx}
       />
     </GeistProvider>
   );

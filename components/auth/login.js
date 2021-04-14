@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Navbar from '../../components/Layouts/Navbar/NavbarSignup';
+import Navbar from '../Layouts/Navbar/Navbar';
 import { TextSemi, TextMedium16 } from '../../utils/typography';
 import { Input, Button, Image } from '@geist-ui/react';
 import { LoginContainer, HelperText, SocialLogin } from './register.style';
 
-function login() {
+function Login() {
   return (
     <>
       <Navbar />
@@ -68,4 +68,4 @@ function login() {
   );
 }
 
-export default login;
+export default Login;
