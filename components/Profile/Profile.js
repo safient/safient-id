@@ -32,7 +32,7 @@ function Profile(props) {
   const [userData, setUserData] = useState(null);
   const [openPanel, setOpenPanel] = useState(false);
 
-  const [state, setState] = useState(false);
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     async function init() {
@@ -51,7 +51,7 @@ function Profile(props) {
 
   return (
     <>
-      <EditProfile state={state} setState={setState} />
+      <EditProfile modal={modal} setModal={setModal} />
       {userData ? (
         <>
           <ProfileHeader>
@@ -78,7 +78,7 @@ function Profile(props) {
                 <Button
                   auto
                   className='btn btn-primary'
-                  onClick={() => setState(true)}
+                  onClick={() => setModal(true)}
                 >
                   {' '}
                   Edit Profile
@@ -202,40 +202,61 @@ function Profile(props) {
           </Form>
         </>
       ) : (
-        // <ProfileHeader>
-        //   <div className='profile-header'>
-        //     <div className='profile-header__left'>
-        //       <div className='profile-header__meta'>
-        //         <div className='profile-header__meta-image'>
-        //           <Avatar
-        //             src='https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
-        //             size='large'
-        //             isSquare={true}
-        //           />
-        //         </div>
+        <>
+          <ProfileHeader>
+            <div className='profile-header'>
+              <div className='profile-header__left'>
+                <div className='profile-header__meta'>
+                  <div className='profile-header__meta-image'>
+                    <Avatar
+                      src='https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+                      size='large'
+                      isSquare={true}
+                    />
+                  </div>
 
-        //         <div className='profile-header__meta-name'>
-        //           <TextSemi20></TextSemi20>
-        //           <Spacer y={0.2} />
-        //           <TextMedium16></TextMedium16>
-        //         </div>
-        //       </div>
-        //     </div>
+                  <div className='profile-header__meta-name'>
+                    <div style={{ display: 'block', padding: '1px' }}>
+                      <img
+                        src='/assets/emptyname.svg'
+                        alt=''
+                        srcset=''
+                        style={{ display: 'block', padding: '1px' }}
+                      />
+                      <img
+                        src='/assets/emptyname.svg'
+                        alt=''
+                        srcset=''
+                        style={{ display: 'block', padding: '1px' }}
+                      />
+                      <img
+                        src='/assets/emptyname.svg'
+                        alt=''
+                        srcset=''
+                        style={{ display: 'block', padding: '1px' }}
+                      />
+                    </div>
 
-        //     <div className='profile-header__right'>
-        //       <Button
-        //         auto
-        //         className='btn btn-primary'
-        //         onClick={(e) => setEdit(true)}
-        //       >
-        //         {' '}
-        //         Edit Profile
-        //       </Button>
-        //     </div>
-        //   </div>
-        // </ProfileHeader>
+                    <Spacer y={0.2} />
+                    <TextMedium16></TextMedium16>
+                  </div>
+                </div>
+              </div>
 
-        <h1>No user data found</h1>
+              <div className='profile-header__right'>
+                <Button
+                  auto
+                  className='btn btn-primary'
+                  onClick={(e) => setModal(true)}
+                >
+                  {' '}
+                  Edit Profile
+                </Button>
+              </div>
+            </div>
+          </ProfileHeader>
+          <Form>No User Data Found, Please Update it..</Form>
+        </>
       )}
     </>
   );

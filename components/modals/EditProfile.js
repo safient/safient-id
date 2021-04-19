@@ -10,12 +10,12 @@ import {
   TextSemi,
 } from '../../utils';
 
-const EditProfile = ({ state, setState }) => {
+const EditProfile = ({ modal, setModal }) => {
   return (
     <ModalContainer>
       <Modal
-        open={state}
-        onClose={() => setState(false)}
+        open={modal}
+        onClose={() => setModal(false)}
         disableBackdropClick={true}
         wrapClassName='test'
         width='800px'
@@ -85,7 +85,7 @@ const EditProfile = ({ state, setState }) => {
           </div>
         </Form>
 
-        <Modal.Action passive onClick={() => setState(false)}>
+        <Modal.Action passive onClick={() => setModal(false)}>
           Cancel
         </Modal.Action>
         <Modal.Action>Submit</Modal.Action>
