@@ -9,6 +9,7 @@ export const NavBar = styled.nav`
   justify-content: space-between;
   box-shadow: 0px 16px 32px rgba(221, 230, 237, 0.4);
   position: sticky;
+  z-index: 50;
   top: 0;
   .navbar-items {
     display: flex;

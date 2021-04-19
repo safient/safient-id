@@ -37,6 +37,7 @@
     "react-dom": "16.13.1",
     "react-feather": "^2.0.9",
     "react-jss": "^10.5.1",
+    "react-sliding-side-panel": "^2.0.3",
     "socket.io-client": "^3.0.5",
     "styled-components": "^5.2.1",
     "styled-jsx": "^3.2.5",

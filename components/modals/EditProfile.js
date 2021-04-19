@@ -1,63 +1,97 @@
 import React, { useState } from 'react';
-import { Modal, Input } from '@geist-ui/react';
-import makeStyles from '../makeStyles';
-import * as Icons from 'react-feather';
-import { updateName } from '../../lib/threadDb';
+import { Modal, Input, Spacer, Textarea } from '@geist-ui/react';
 
-const useStyles = makeStyles((ui) => ({
-  form: {
-    display: ' flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  input: {
-    margin: '6px 0',
-  },
-  inputField: {
-    width: '310px !important',
-  },
-}));
+import { Form, FormBottom, ModalContainer } from './EditProfile.styles';
+import {
+  TextMedium16,
+  TextSemi20,
+  HeaderText,
+  HeadingSemi,
+  TextSemi,
+} from '../../utils';
 
-function EditProfie({ editName, setEditName, email }) {
-  const classes = useStyles();
-
-  const [name, setName] = useState(null);
-
-  const handleSubmit = async () => {
-    console.log('Name:', name);
-    console.log('Email:', email);
-    const status = await updateName(name, email);
-    if (status) alert('Updated');
-    else alert('SOme error!!1 try latter');
-  };
-
+const EditProfile = ({ state, setState }) => {
   return (
-    <Modal
-      open={editName}
-      onClose={() => setEditName(false)}
-      disableBackdropClick={true}
-    >
-      <Modal.Title>Edit Profile </Modal.Title>
+    <ModalContainer>
+      <Modal
+        open={state}
+        onClose={() => setState(false)}
+        disableBackdropClick={true}
+        wrapClassName='test'
+        width='800px'
+      >
+        <Form>
+          <HeadingSemi>Update Profile</HeadingSemi>
 
-      <Modal.Content>
-        <div className={classes.form}>
-          <div className={classes.input}>
-            <Input
-              placeholder='Enter your Name'
-              icon={<Icons.User />}
-              className={classes.inputField}
-              onChange={(e) => setName(e.target.value)}
+          <div className='form-group'>
+            <div className='form-group__items items'>
+              <div className='group'>
+                <TextSemi>Name</TextSemi>
+                <Spacer y={0.2} />
+                <Input placeholder='Koushith' className='form-group__input ' />
+                <Spacer y={0.6} />
+              </div>
+              <div className='group'>
+                <TextSemi>Location</TextSemi>
+                <Spacer y={0.2} />
+                <Input placeholder='Bengaluru' className='form-group__input ' />
+                <Spacer y={0.6} />
+              </div>
+            </div>
+
+            <TextSemi>Bio</TextSemi>
+            <Spacer y={0.2} />
+            <Textarea
+              placeholder='I am a Software Engineer...'
+              className=' text-area'
             />
-          </div>
-        </div>
-      </Modal.Content>
-      <Modal.Action passive onClick={() => setEditName(false)}>
-        Cancel
-      </Modal.Action>
-      <Modal.Action onClick={handleSubmit}>Submit</Modal.Action>
-    </Modal>
-  );
-}
+            <Spacer y={0.6} />
 
-export default EditProfie;
+            <div className='form-group__items items'>
+              <div className='group'></div>
+            </div>
+
+            <div className='form-group__items items'>
+              <div className='group'>
+                <TextSemi>GitHub</TextSemi>
+                <Spacer y={0.2} />
+                <Input
+                  label='https://github.com/'
+                  placeholder='koushith'
+                  className='form-group__input '
+                />
+                <Spacer y={0.6} />
+              </div>
+              <div className='group'>
+                <TextSemi>Twitter</TextSemi>
+                <Spacer y={0.2} />
+                <Input
+                  label='https://github.com/'
+                  placeholder='koushith'
+                  className='form-group__input '
+                />
+                <Spacer y={0.6} />
+              </div>
+            </div>
+
+            <div className='form-group__items items'>
+              <div className='group'>
+                <TextSemi>Email</TextSemi>
+                <Spacer y={0.2} />
+                <Input placeholder='jsfjfd' className='form-group__input ' />
+                <Spacer y={0.6} />
+              </div>
+            </div>
+          </div>
+        </Form>
+
+        <Modal.Action passive onClick={() => setState(false)}>
+          Cancel
+        </Modal.Action>
+        <Modal.Action>Submit</Modal.Action>
+      </Modal>
+    </ModalContainer>
+  );
+};
+
+export default EditProfile;
