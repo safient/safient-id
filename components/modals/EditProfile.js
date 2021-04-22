@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { Modal, Input, Spacer, Textarea } from '@geist-ui/react';
 
 import { Form, FormBottom, ModalContainer } from './EditProfile.styles';
@@ -10,7 +10,52 @@ import {
   TextSemi,
 } from '../../utils';
 
-const EditProfile = ({ modal, setModal }) => {
+const EditProfile = ({ modal, setModal, idx }) => {
+
+
+  const [name, setName] = useState('');
+  const [homeLocation, setHomeLocation] = useState('');
+  const [residenceCountry, setResidenceCountry] = useState('IN')
+  const [email, setEmail] = useState('');
+  const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    async function init() {
+      try {
+        const res = await idx.get('basicProfile', idx.id);
+        if(res){
+          setName(res.name);
+          setHomeLocation(res.homeLocation)
+          setResidenceCountry(res.residenceCountry)
+          setEmail(res.url)
+          setDescription(res.description)
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    init();
+  }, [modal]);
+
+  const handleSubmit = async () => {
+    try{
+      setLoading(true)
+      await idx.set('basicProfile', {
+        name: name,
+        description: description,
+        url: email,
+        homeLocation: homeLocation,
+        residenceCountry: residenceCountry,
+      });
+      setLoading(false)
+      setModal(false)
+      setProfileEdit(true)
+    }catch(e){
+      console.log(e)
+    }
+  }
+
   return (
     <ModalContainer>
       <Modal
@@ -28,13 +73,13 @@ const EditProfile = ({ modal, setModal }) => {
               <div className='group'>
                 <TextSemi>Name</TextSemi>
                 <Spacer y={0.2} />
-                <Input placeholder='Koushith' className='form-group__input ' />
+                <Input placeholder={name} className='form-group__input ' value={name} onChange={e => setName(e.target.value)} />
                 <Spacer y={0.6} />
               </div>
               <div className='group'>
-                <TextSemi>Location</TextSemi>
+                <TextSemi>City</TextSemi>
                 <Spacer y={0.2} />
-                <Input placeholder='Bengaluru' className='form-group__input ' />
+                <Input placeholder={homeLocation} className='form-group__input ' value={homeLocation} onChange={e => setHomeLocation(e.target.value)} />
                 <Spacer y={0.6} />
               </div>
             </div>
@@ -42,8 +87,10 @@ const EditProfile = ({ modal, setModal }) => {
             <TextSemi>Bio</TextSemi>
             <Spacer y={0.2} />
             <Textarea
-              placeholder='I am a Software Engineer...'
+              placeholder={description}
               className=' text-area'
+              value={description}
+              onChange={e => setDescription(e.target.value)}
             />
             <Spacer y={0.6} />
 
@@ -53,32 +100,9 @@ const EditProfile = ({ modal, setModal }) => {
 
             <div className='form-group__items items'>
               <div className='group'>
-                <TextSemi>GitHub</TextSemi>
-                <Spacer y={0.2} />
-                <Input
-                  label='https://github.com/'
-                  placeholder='koushith'
-                  className='form-group__input '
-                />
-                <Spacer y={0.6} />
-              </div>
-              <div className='group'>
-                <TextSemi>Twitter</TextSemi>
-                <Spacer y={0.2} />
-                <Input
-                  label='https://github.com/'
-                  placeholder='koushith'
-                  className='form-group__input '
-                />
-                <Spacer y={0.6} />
-              </div>
-            </div>
-
-            <div className='form-group__items items'>
-              <div className='group'>
                 <TextSemi>Email</TextSemi>
                 <Spacer y={0.2} />
-                <Input placeholder='jsfjfd' className='form-group__input ' />
+                <Input placeholder={email} className='form-group__input ' value={email} onChange={e => setEmail(e.target.value)}/>
                 <Spacer y={0.6} />
               </div>
             </div>
@@ -88,7 +112,7 @@ const EditProfile = ({ modal, setModal }) => {
         <Modal.Action passive onClick={() => setModal(false)}>
           Cancel
         </Modal.Action>
-        <Modal.Action>Submit</Modal.Action>
+        <Modal.Action onClick={handleSubmit}>Submit</Modal.Action>
       </Modal>
     </ModalContainer>
   );

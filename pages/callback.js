@@ -83,7 +83,7 @@ const Callback = (props) => {
       let userMetadata = await magic.user.getMetadata();
       // console.log("threadData:",threadData)
       console.log('User:', userMetadata);
-      await registerMagicLinkUser(idx, identity, userMetadata.email);
+      //await registerMagicLinkUser(idx, identity, userMetadata.email);
       // if (threadData===null){
       //   await registerMagicLinkUser(idx, identity, userMetadata.email)
       // }else{

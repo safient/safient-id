@@ -23,7 +23,7 @@ function Profile(props) {
   // edit-btn if it's true, text inputs will be enabled
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState('');
-  const [location, setLocation] = useState('Bengaluru');
+  const [location, setLocation] = useState('');
   const [website, setWebsite] = useState('');
   const [bio, setBio] = useState('');
   const [github, setGithub] = useState('');
@@ -31,7 +31,7 @@ function Profile(props) {
   const [email, setEmail] = useState('');
   const [userData, setUserData] = useState(null);
   const [openPanel, setOpenPanel] = useState(false);
-
+  const [profileEdit, setProfileEdit] = useState(false)
   const [modal, setModal] = useState(false);
 
   useEffect(() => {
@@ -47,11 +47,11 @@ function Profile(props) {
       }
     }
     init();
-  }, []);
+  }, [modal]);
 
   return (
     <>
-      <EditProfile modal={modal} setModal={setModal} />
+      <EditProfile modal={modal} setModal={setModal} idx={props.idx} userData={userData} setProfileEdit={setProfileEdit}/>
       {userData ? (
         <>
           <ProfileHeader>

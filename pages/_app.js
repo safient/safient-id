@@ -80,6 +80,8 @@ function MyApp({ Component, pageProps }) {
       const idx = new IDX({ ceramic })
       setIdx(idx)
       console.log("IDX", idx)
+      const res = await idx.get('basicProfile', idx.id)
+      console.log(res)
       if(idx){
         setUserStatus(2)
       }
