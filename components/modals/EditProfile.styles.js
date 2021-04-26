@@ -4,6 +4,7 @@ import { Modal } from '@geist-ui/react';
 export const Form = styled.div`
   width: auto;
   overflow: hidden;
+
   .form-group {
     background: #fff;
     box-shadow: 0px 16px 32px rgba(221, 230, 237, 0.4);
@@ -17,7 +18,7 @@ export const Form = styled.div`
     justify-content: flex-start;
     padding-left: 18px;
     .text-area {
-      width: 84%;
+      width: 97%;
     }
     .form-group__items {
       display: flex;
@@ -36,10 +37,11 @@ export const Form = styled.div`
     }
     &__input {
       width: 300px !important;
-      height: 50px !important;
+      height: 40px !important;
+      text-align: start;
     }
 
-    . text-area {
+    .text-area {
       height: auto;
     }
   }

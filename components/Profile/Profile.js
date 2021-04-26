@@ -9,7 +9,7 @@ import {
   Textarea,
 } from '@geist-ui/react';
 import { FormBottom, ProfileHeader, IconContainer, Form } from '../Profile';
-import SlidingPanel from 'react-sliding-side-panel';
+
 import {
   TextMedium16,
   TextSemi20,
@@ -18,6 +18,7 @@ import {
   TextSemi,
 } from '../../utils';
 import EditProfile from '../modals/EditProfile';
+import TwitterVerify from './TwitterVerify';
 
 function Profile(props) {
   // edit-btn if it's true, text inputs will be enabled
@@ -26,12 +27,11 @@ function Profile(props) {
   const [location, setLocation] = useState('');
   const [website, setWebsite] = useState('');
   const [bio, setBio] = useState('');
-  const [github, setGithub] = useState('');
-  const [twitter, setTwitter] = useState('');
+
   const [email, setEmail] = useState('');
   const [userData, setUserData] = useState(null);
   const [openPanel, setOpenPanel] = useState(false);
-  const [profileEdit, setProfileEdit] = useState(false)
+  const [profileEdit, setProfileEdit] = useState(false);
   const [modal, setModal] = useState(false);
 
   useEffect(() => {
@@ -51,7 +51,13 @@ function Profile(props) {
 
   return (
     <>
-      <EditProfile modal={modal} setModal={setModal} idx={props.idx} userData={userData} setProfileEdit={setProfileEdit}/>
+      <EditProfile
+        modal={modal}
+        setModal={setModal}
+        idx={props.idx}
+        userData={userData}
+        setProfileEdit={setProfileEdit}
+      />
       {userData ? (
         <>
           <ProfileHeader>
@@ -122,7 +128,7 @@ function Profile(props) {
                   />
                 </div>
                 <div className='form-group__input'>
-                  <TextSemi>Location</TextSemi>
+                  <TextSemi>Country</TextSemi>
                   <Spacer y={0.2} />
                   <Input
                     value={location}
@@ -133,50 +139,37 @@ function Profile(props) {
                 </div>
               </div>
 
-              <div className='form-group__fields'>
-                <div className='form-group__input'>
-                  <TextSemi>Bio</TextSemi>
-                  <Spacer y={0.2} />
-                  <Textarea
-                    width='100%'
-                    onChange={(e) => setBio(e.target.value)}
-                    value={bio}
-                    readOnly={!edit}
-                    placeholder={userData.description}
-                    className='form-group__input input text-area'
-                  />
-                </div>
+              <div className='form-group__input'>
+                <TextSemi>City</TextSemi>
+                <Spacer y={0.2} />
+                <Input
+                  value={location}
+                  readOnly={!edit}
+                  placeholder={userData.homeLocation}
+                  className='form-group__input input'
+                />
+              </div>
+
+              <div className=''>
+                <TextSemi>Bio</TextSemi>
+                <Spacer y={0.2} />
+                <Textarea
+                  width='65%'
+                  onChange={(e) => setBio(e.target.value)}
+                  value={bio}
+                  readOnly={!edit}
+                  placeholder={userData.description}
+                  className=''
+                />
               </div>
             </div>
           </Form>
-
           <Form>
             <HeadingSemi>Verified Accounts</HeadingSemi>
             <div className='form-group'>
               <div className='form-group__fields'>
                 <div className='form-group__input'>
-                  <TextSemi>GitHub</TextSemi>
-                  <Spacer y={0.2} />
-
-                  <Input
-                    value={twitter}
-                    readOnly={!edit}
-                    label='https://github.com/'
-                    placeholder='koushith'
-                    className='form-group__input input'
-                  />
-                </div>
-                <div className='form-group__input'>
-                  <TextSemi>Twitter</TextSemi>
-                  <Spacer y={0.2} />
-
-                  <Input
-                    value={twitter}
-                    readOnly={!edit}
-                    label='https://twitter.com/'
-                    placeholder='koushith'
-                    className='form-group__input input'
-                  />
+                  <TwitterVerify />
                 </div>
               </div>
             </div>

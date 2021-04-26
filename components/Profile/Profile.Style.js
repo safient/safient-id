@@ -71,7 +71,10 @@ export const IconContainer = styled.div`
 export const Form = styled.div`
   width: 1280px;
   margin: 24px auto;
-
+  .text-area {
+    background-color: red;
+    width: 70%;
+  }
   .form-group {
     background: #fff;
     box-shadow: 0px 16px 32px rgba(221, 230, 237, 0.4);
@@ -88,7 +91,7 @@ export const Form = styled.div`
       .input {
         border-radius: 5px;
         width: 350px;
-        height: 50px;
+        height: 44px;
         margin-right: 60px;
         margin-bottom: 20px;
         &:not(:last-child) {
@@ -98,10 +101,6 @@ export const Form = styled.div`
           /* Chrome/Opera/Safari */
           color: grey;
         }
-      }
-
-      .text-area {
-        height: 100px;
       }
     }
   }
