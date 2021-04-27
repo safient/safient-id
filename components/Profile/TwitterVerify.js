@@ -33,7 +33,7 @@ function TwitterVerify({idx, magicProvider, userAddress}) {
   }, [modal]);
 
   const getTweetMessage = (signature, address) => {
-    const tweetMessage = `🤪Verifying my Twitter account for SafexID
+    const tweetMessage = `😎 Verifying my Twitter account for SafexID
     addr:${address}
     sig:${signature ?? ''}`
     setTwitterMessage(tweetMessage)
