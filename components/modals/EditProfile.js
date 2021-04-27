@@ -15,8 +15,7 @@ import {
 const EditProfile = ({ modal, setModal, idx }) => {
   const [name, setName] = useState('');
   const [homeLocation, setHomeLocation] = useState('');
-  const [residenceCountry, setResidenceCountry] = useState('IN');
-  const [city, setCity] = useState('Bangalore');
+  const [residenceCountry, setResidenceCountry] = useState('');
   const [email, setEmail] = useState('');
   const [description, setDescription] = useState('');
 
@@ -24,11 +23,9 @@ const EditProfile = ({ modal, setModal, idx }) => {
 
   // get country from dropdown
 
-  console.log('residance', residenceCountry);
   const selectCountry = useMemo(() => countryList().getData(), []);
   const changeHandler = (residenceCountry) => {
-    setResidenceCountry(residenceCountry);
-    setCity('');
+    setResidenceCountry(residenceCountry.value);
   };
 
   useEffect(() => {
@@ -61,7 +58,6 @@ const EditProfile = ({ modal, setModal, idx }) => {
       });
       setLoading(false);
       setModal(false);
-      setProfileEdit(true);
     } catch (e) {
       console.log(e);
     }
@@ -125,10 +121,10 @@ const EditProfile = ({ modal, setModal, idx }) => {
                 <TextSemi>City</TextSemi>
                 <Spacer y={0.2} />
                 <Input
-                  value={city}
+                  value={homeLocation}
                   placeholder='Enter City'
                   className='form-group__input '
-                  onChange={(e) => setCity(e.target.value)}
+                  onChange={(e) => setHomeLocation(e.target.value)}
                 />
                 <Spacer y={0.6} />
               </div>

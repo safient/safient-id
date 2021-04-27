@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   Input,
@@ -11,16 +11,59 @@ import {
 } from '@geist-ui/react';
 import { TextSemi } from '../../utils';
 import { TwitterVerify } from './TwiiterVerify.styles';
+import axios from 'axios'
+import {definitions} from "../../utils/config.json"
 
-function TwitterVerifyModal({ modal, setModal }) {
+function TwitterVerifyModal({ modal, setModal, twitterMessage, twitterUsername, address, idx }) {
   const [loading, setLoading] = useState(false);
+  const [twitterStatus, setTwitterStatus] = useState('Twitter is not yet Verified');
+
 
   const [, setToast] = useToasts();
+
+
   const { copy } = useClipboard();
-  const copyDID = () => {
-    copy('did:3:bafyreievdumz26mkf6a57as7ez4yxqwmuyxqiy5w2wzpdhd2updlwwkfxm');
-    setToast({ text: 'DID copied.' });
+
+
+
+  const copyTweet = () => {
+    copy(twitterMessage);
+    setToast({ text: 'Tweet copied.' });
   };
+
+  const handleVerify = async () => {
+    try{
+      const url = 'http://localhost:3001/verify'
+
+      const res = await axios.post(url, 
+        {account: address, 
+         username: twitterUsername, 
+         did: idx.id})
+
+      if(res.data.status === 200){
+        await idx.set( definitions.profile, {
+          twitter: {
+            username:twitterUsername,
+            status:true
+          }
+        })
+        setTwitterStatus(`🎉 ${twitterUsername} is Verified! `)
+      }
+      else{
+        await idx.set( definitions.profile, {
+          twitter: {
+            username:twitterUsername,
+            status:false
+          }
+        })
+        setTwitterStatus("😟 Not Verified! Something went wrong")
+      }
+      console.log(res);
+
+    }catch(e){
+      console.log(e)
+    }
+  }
 
   return (
     <>
@@ -39,17 +82,19 @@ function TwitterVerifyModal({ modal, setModal }) {
           <div className='twitter-container__verify'>
             <div className='verify'>
               <div className='verify-steps'>1</div>
-              <p>Tweet a unique key from the account you want to connect.</p>
+              <p>Tweet the following from the account you want to connect.</p>
 
-              <div onClick={copyDID} className='verify-didContainer'>
-                <p>
-                  This tweet links my Twitter to my SafeID✅ See my profile at
-                  https://safeid.io/
-                  did:3:bafyreievdumz26mkf6a57as7ez4yxqwmuyxqiy5
-                </p>
+              <div onClick={copyTweet} className='verify-didContainer'>
+              {
+                    twitterMessage ? (twitterMessage) : (
+                      <p>
+                        Something went wrong! Please try again.
+                      </p>
+                    )
+              }
               </div>
               <div className='verify-btn'>
-                <Button auto onClick={copyDID} className='btn'>
+                <Button auto onClick={copyTweet} className='btn'>
                   Copy
                 </Button>
               </div>
@@ -62,11 +107,11 @@ function TwitterVerifyModal({ modal, setModal }) {
               </p>
 
               <div className='verify-didContainer'>
-                <p>Twitter is not yet Verified</p>
+                <p>{twitterStatus}</p>
                 {/* <Spinner /> */}
               </div>
               <div className='verify-btn'>
-                <Button auto className='btn'>
+                <Button auto className='btn' onClick={handleVerify}>
                   Verify
                 </Button>
               </div>

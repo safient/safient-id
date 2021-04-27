@@ -33,6 +33,9 @@ function MyApp({ Component, pageProps }) {
   const [userData, setUserData] =useState([]);
   const [identity, setIdentity] = useState(null);
   const [userStatus, setUserStatus] = useState(0)
+  const [userAddress, setUserAddress] = useState(null)
+  const [magicProvider, setMagicProvider] = useState(null);
+
 
   const toggleDarkMode = () =>
   setThemeType(themeType === 'dark' ? 'light' : 'dark');
@@ -93,10 +96,9 @@ function MyApp({ Component, pageProps }) {
       const ceramic = new Ceramic(CERAMIC_URL)
 
       const getPermission = () => Promise.resolve([])
-       const {authSecret, providerUsed}= await generateIdentity(magicLinkProvider);
+       const {authSecret, providerUsed, userAddress}= await generateIdentity(magicLinkProvider);
 
-      const identity = PrivateKey.fromRawEd25519Seed(Uint8Array.from(authSecret))
-      setIdentity(identity)
+       setMagicProvider(providerUsed)
 
       const authId = "MagicLinkAuthenticationMethod" // a name of the auth method
       const threeId = await ThreeIdProvider.create({ getPermission, authSecret, authId, ceramic })
@@ -124,6 +126,7 @@ function MyApp({ Component, pageProps }) {
       userStatus = {userStatus}
       setUserStatus = {setUserStatus}
       idx={idx}
+      magicProvider={magicProvider}
       />
     </GeistProvider>
   );

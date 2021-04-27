@@ -9,7 +9,6 @@ import {
   Textarea,
 } from '@geist-ui/react';
 import { FormBottom, ProfileHeader, IconContainer, Form } from '../Profile';
-
 import {
   TextMedium16,
   TextSemi20,
@@ -22,10 +21,10 @@ import TwitterVerify from './TwitterVerify';
 
 function Profile(props) {
   // edit-btn if it's true, text inputs will be enabled
+
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
-  const [website, setWebsite] = useState('');
   const [bio, setBio] = useState('');
 
   const [email, setEmail] = useState('');
@@ -38,9 +37,6 @@ function Profile(props) {
     async function init() {
       try {
         const res = await props.idx.get('basicProfile', props.idx.id);
-        console.log('Result', res);
-        console.log('IDX', props.idx);
-        console.log('Did', props.idx.id);
         setUserData(res);
       } catch (err) {
         console.log(err);
@@ -133,7 +129,7 @@ function Profile(props) {
                   <Input
                     value={location}
                     readOnly={!edit}
-                    placeholder={userData.homeLocation}
+                    placeholder={userData.residenceCountry}
                     className='form-group__input input'
                   />
                 </div>
@@ -169,7 +165,7 @@ function Profile(props) {
             <div className='form-group'>
               <div className='form-group__fields'>
                 <div className='form-group__input'>
-                  <TwitterVerify />
+                  <TwitterVerify idx={props.idx} magicProvider={props.magicProvider}/>
                 </div>
               </div>
             </div>

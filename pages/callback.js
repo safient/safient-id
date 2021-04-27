@@ -43,6 +43,7 @@ const Callback = (props) => {
       setShowValidatingToken(true);
       setLoader(true);
       let web3Provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+      console.log(web3Provider);
       const { idx, identity } = await props.handleMagicLink(web3Provider);
       setLoader(false);
       console.log('Done');

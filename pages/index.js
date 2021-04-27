@@ -26,7 +26,7 @@ function Home(props) {
       <>
       <Layout>
       <Navbar />
-      <Profile idx={props.idx}/>
+      <Profile idx={props.idx} userAddress={props.userAddress} magicProvider={props.magicProvider}/>
     </Layout>
     </>
      ) : (
