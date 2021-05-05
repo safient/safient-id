@@ -11,20 +11,25 @@ import {
 } from '@geist-ui/react';
 import { TextSemi } from '../../utils';
 import { TwitterVerify } from './TwiiterVerify.styles';
-import axios from 'axios'
-import {definitions} from "../../utils/config.json"
+import axios from 'axios';
+import { definitions } from '../../utils/config.json';
 
-function TwitterVerifyModal({ modal, setModal, twitterMessage, twitterUsername, address, idx }) {
+function TwitterVerifyModal({
+  modal,
+  setModal,
+  twitterMessage,
+  twitterUsername,
+  address,
+  idx,
+}) {
   const [loading, setLoading] = useState(false);
-  const [twitterStatus, setTwitterStatus] = useState('Twitter is not yet Verified');
-
+  const [twitterStatus, setTwitterStatus] = useState(
+    'Twitter is not yet Verified'
+  );
 
   const [, setToast] = useToasts();
 
-
   const { copy } = useClipboard();
-
-
 
   const copyTweet = () => {
     copy(twitterMessage);
@@ -32,38 +37,39 @@ function TwitterVerifyModal({ modal, setModal, twitterMessage, twitterUsername, 
   };
 
   const handleVerify = async () => {
-    try{
-      const url = 'http://localhost:3001/verify'
+    try {
+      setLoading(true);
+      const url = 'http://localhost:3001/verify';
 
-      const res = await axios.post(url, 
-        {account: address, 
-         username: twitterUsername, 
-         did: idx.id})
+      const res = await axios.post(url, {
+        account: address,
+        username: twitterUsername,
+        did: idx.id,
+      });
 
-      if(res.data.status === 200){
-        await idx.set( definitions.profile, {
+      if (res.data.status === 200) {
+        await idx.set(definitions.profile, {
           twitter: {
-            username:twitterUsername,
-            status:true
-          }
-        })
-        setTwitterStatus(`🎉 ${twitterUsername} is Verified! `)
-      }
-      else{
-        await idx.set( definitions.profile, {
+            username: twitterUsername,
+            status: true,
+          },
+        });
+        setLoading(false);
+        setTwitterStatus(`🎉 ${twitterUsername} is Verified! `);
+      } else {
+        await idx.set(definitions.profile, {
           twitter: {
-            username:twitterUsername,
-            status:false
-          }
-        })
-        setTwitterStatus("😟 Not Verified! Something went wrong")
+            username: twitterUsername,
+            status: false,
+          },
+        });
+        setTwitterStatus('😟 Not Verified! Something went wrong');
       }
       console.log(res);
-
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
-  }
+  };
 
   return (
     <>
@@ -85,13 +91,11 @@ function TwitterVerifyModal({ modal, setModal, twitterMessage, twitterUsername, 
               <p>Tweet the following from the account you want to connect.</p>
 
               <div onClick={copyTweet} className='verify-didContainer'>
-              {
-                    twitterMessage ? (twitterMessage) : (
-                      <p>
-                        Something went wrong! Please try again.
-                      </p>
-                    )
-              }
+                {twitterMessage ? (
+                  <p style={{ Width: '50px' }}>{twitterMessage}</p>
+                ) : (
+                  <p>Something went wrong! Please try again.</p>
+                )}
               </div>
               <div className='verify-btn'>
                 <Button auto onClick={copyTweet} className='btn'>
@@ -107,8 +111,7 @@ function TwitterVerifyModal({ modal, setModal, twitterMessage, twitterUsername, 
               </p>
 
               <div className='verify-didContainer'>
-                <p>{twitterStatus}</p>
-                {/* <Spinner /> */}
+                {loading ? <Spinner /> : <p>{twitterStatus}</p>}
               </div>
               <div className='verify-btn'>
                 <Button auto className='btn' onClick={handleVerify}>

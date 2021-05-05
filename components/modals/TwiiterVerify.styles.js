@@ -57,7 +57,7 @@ export const TwitterVerify = styled.div`
           p {
             width: -webkit-fill-available;
             text-align: center;
-            padding: 0 28px;
+            padding: 0 8px;
             color: #555770 !important;
           }
         }
