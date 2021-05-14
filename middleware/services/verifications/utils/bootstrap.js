@@ -8,27 +8,18 @@ const fromString = require('uint8arrays/from-string')
 
 const CERAMIC_URL = 'https://ceramic.signchain.xyz'
 
-const VerificationSchema = {
-    "type": "object",
-    "title": "Verifications",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "properties": {
-         "twitter": {
-                "type": "object",
-                "title": "Twitter",
-                "properties": {
-                  "username":{
-                    "type":"string",
-                    "title":"username"
-                  },
-                  "status":{
-                    "type":"boolean",
-                    "title":"status"
-                  }
-                }
-              },
-            }
+  const VerifiedProfilesSchema = {
+    doctype: 'object',
+    title: 'Encryption Key',
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    properties: {
+      verifications: {
+        type: 'array',
+        title: 'verified'
       }
+    },
+  }
+
 
 async function run() {
   // The seed must be provided as an environment variable
@@ -41,25 +32,28 @@ async function run() {
   await ceramic.setDIDProvider(new Ed25519Provider(seed))
 
   // Publish the two schemas
-  const [verfications] = await Promise.all([
-    publishSchema(ceramic, { content: VerificationSchema })
+  const [verifiedProfile] = await Promise.all([
+    publishSchema(ceramic, { content: VerifiedProfilesSchema }),
   ])
 
-  console.log("Profile Schema", verfications)
+  console.log("Profile Schema", verifiedProfile)
+ 
 
   // Create the definition using the created schema ID
-  const verificationDefinition = await createDefinition(ceramic, {
-    name: 'Verification',
-    description: 'Verification Schema',
-    schema: verfications.commitId.toUrl(),
+  const verifiedProfileDefinition = await createDefinition(ceramic, {
+    name: 'Profile',
+    description: 'Profile Schema',
+    schema: verifiedProfile.commitId.toUrl(),
   })
+
+
   // Write config to JSON file
   const config = {
     definitions: {
-      profile: verificationDefinition.id.toString(),
+      profile: verifiedProfileDefinition.id.toString()
     },
     schemas: {
-      profile: verfications.commitId.toUrl(),
+      profile: verifiedProfile.commitId.toUrl(),
     },
   }
   await writeFile('./config.json', JSON.stringify(config))

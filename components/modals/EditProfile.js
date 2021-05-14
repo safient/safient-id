@@ -1,63 +1,154 @@
-import React, { useState } from 'react';
-import { Modal, Input } from '@geist-ui/react';
-import makeStyles from '../makeStyles';
-import * as Icons from 'react-feather';
-import { updateName } from '../../lib/threadDb';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Modal, Input, Spacer, Textarea } from '@geist-ui/react';
+import Select from 'react-select';
+import countryList from 'react-select-country-list';
+import { Form, FormBottom, ModalContainer } from './EditProfile.styles';
 
-const useStyles = makeStyles((ui) => ({
-  form: {
-    display: ' flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  input: {
-    margin: '6px 0',
-  },
-  inputField: {
-    width: '310px !important',
-  },
-}));
+import {
+  TextMedium16,
+  TextSemi20,
+  HeaderText,
+  HeadingSemi,
+  TextSemi,
+} from '../../utils';
 
-function EditProfie({ editName, setEditName, email }) {
-  const classes = useStyles();
+const EditProfile = ({ modal, setModal, idx }) => {
+  const [name, setName] = useState('');
+  const [homeLocation, setHomeLocation] = useState('');
+  const [residenceCountry, setResidenceCountry] = useState('');
+  const [email, setEmail] = useState('');
+  const [description, setDescription] = useState('');
 
-  const [name, setName] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // get country from dropdown
+
+  const selectCountry = useMemo(() => countryList().getData(), []);
+  const changeHandler = (residenceCountry) => {
+    setResidenceCountry(residenceCountry.value);
+  };
+
+  useEffect(() => {
+    async function init() {
+      try {
+        const res = await idx.get('basicProfile', idx.id);
+        if (res) {
+          setName(res.name);
+          setHomeLocation(res.homeLocation);
+          setResidenceCountry(res.residenceCountry);
+          setEmail(res.url);
+          setDescription(res.description);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    init();
+  }, [modal]);
 
   const handleSubmit = async () => {
-    console.log('Name:', name);
-    console.log('Email:', email);
-    const status = await updateName(name, email);
-    if (status) alert('Updated');
-    else alert('SOme error!!1 try latter');
+    try {
+      setLoading(true);
+      await idx.set('basicProfile', {
+        name: name,
+        description: description,
+        url: email,
+        homeLocation: homeLocation,
+        residenceCountry: residenceCountry,
+      });
+      setLoading(false);
+      setModal(false);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
-    <Modal
-      open={editName}
-      onClose={() => setEditName(false)}
-      disableBackdropClick={true}
-    >
-      <Modal.Title>Edit Profile </Modal.Title>
+    <ModalContainer>
+      <Modal
+        open={modal}
+        onClose={() => setModal(false)}
+        disableBackdropClick={true}
+        wrapClassName='test'
+        width='700px'
+      >
+        <Form>
+          <HeadingSemi>Update Profile</HeadingSemi>
 
-      <Modal.Content>
-        <div className={classes.form}>
-          <div className={classes.input}>
-            <Input
-              placeholder='Enter your Name'
-              icon={<Icons.User />}
-              className={classes.inputField}
-              onChange={(e) => setName(e.target.value)}
+          <div className='form-group'>
+            <div className='form-group__items items'>
+              <div className='group'>
+                <TextSemi>Name</TextSemi>
+                <Spacer y={0.2} />
+                <Input
+                  placeholder={name}
+                  className='form-group__input '
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <Spacer y={0.6} />
+              </div>
+
+              <div className='group'>
+                <TextSemi>Email</TextSemi>
+                <Spacer y={0.2} />
+                <Input
+                  placeholder={email}
+                  className='form-group__input '
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <Spacer y={0.6} />
+              </div>
+            </div>
+
+            <div className='form-group__items items'>
+              <div className='group'>
+                <TextSemi>Country</TextSemi>
+                <Spacer y={0.2} />
+                <Select
+                  className='form-group__input '
+                  placeholder='Select Country'
+                  options={selectCountry}
+                  value={residenceCountry}
+                  onChange={changeHandler}
+                />
+
+                <Spacer y={0.6} />
+              </div>
+
+              <div className='group'>
+                <TextSemi>City</TextSemi>
+                <Spacer y={0.2} />
+                <Input
+                  value={homeLocation}
+                  placeholder='Enter City'
+                  className='form-group__input '
+                  onChange={(e) => setHomeLocation(e.target.value)}
+                />
+                <Spacer y={0.6} />
+              </div>
+            </div>
+
+            <TextSemi>Bio</TextSemi>
+            <Spacer y={0.2} />
+            <Textarea
+              placeholder={description}
+              className=' text-area'
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
+            <Spacer y={0.6} />
           </div>
-        </div>
-      </Modal.Content>
-      <Modal.Action passive onClick={() => setEditName(false)}>
-        Cancel
-      </Modal.Action>
-      <Modal.Action onClick={handleSubmit}>Submit</Modal.Action>
-    </Modal>
-  );
-}
+        </Form>
 
-export default EditProfie;
+        <Modal.Action passive onClick={() => setModal(false)}>
+          Cancel
+        </Modal.Action>
+        <Modal.Action onClick={handleSubmit}>Submit</Modal.Action>
+      </Modal>
+    </ModalContainer>
+  );
+};
+
+export default EditProfile;

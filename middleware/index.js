@@ -6,6 +6,7 @@ const socket = require('./services/threadDb/socket-io');
 const email = require('./services/email/sgEmail');
 const dbRoute = require('./services/threadDb/routes')
 const magiclinkRoute = require('./services/magiclink/magicLinkServer');
+const twitterVefiers = require('./services/verifications/routes')
 const app = express()
 app.use(cors())
 app.use(express.json());
@@ -26,6 +27,7 @@ email(app)
 socket(io)
 dbRoute(app)
 magiclinkRoute(app);
+twitterVefiers(app);
 
 http.listen('3001', ()=>{
   console.log("Listening on port:", PORT)
